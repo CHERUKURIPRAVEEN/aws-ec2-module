@@ -1,4 +1,4 @@
-os                      = "Ubuntu"
+os                      = "ubuntu"
 application             = "test-application"
 environment             = "Dev"
 project                 = "test-project"
