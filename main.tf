@@ -19,7 +19,7 @@ locals {
 # Data source to get the latest AMI based on the provided filters
 data "aws_ami" "this" {
   most_recent = true
-  owners = ["amazon"]
+  owners      = ["amazon"]
   filter {
     name   = "name"
     values = var.ami_name == "" ? local.ami_filters[var.os] : [var.ami_name]
