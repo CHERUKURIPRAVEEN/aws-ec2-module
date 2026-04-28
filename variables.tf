@@ -123,12 +123,6 @@ variable "instance_type" {
   default     = "t3.micro"
 }
 
-variable "iam_instance_profile" {
-  description = "IAM instance profile to be attached to the EC2 instance"
-  type        = string
-  default     = ""
-}
-
 variable "instance_role" {
   description = "Instance role for the EC2 instance"
   type        = string

@@ -108,7 +108,7 @@ data "aws_subnet" "private" {
 resource "aws_instance" "this" {
   ami                  = data.aws_ami.this.id
   instance_type        = var.instance_type
-  iam_instance_profile = var.iam_instance_profile
+  iam_instance_profile = local.instance_role
   # subnet_id            = length(data.aws_subnets.public.ids) > 0 ? data.aws_subnets.public.ids[0] : data.aws_subnets.private.ids[0]
   subnet_id         = element(concat(data.aws_subnets.public.ids, data.aws_subnets.private.ids), 0)
   security_groups   = var.security_groups
