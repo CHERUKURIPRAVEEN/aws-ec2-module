@@ -9,17 +9,23 @@
 
 # local variable to map OS to AMI filters
 locals {
-  ami_filters = tomap({
+  ami_filters = {
     ubuntu      = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
     amazonlinux = ["al2023-ami-*"]
     rhel        = ["RHEL-9*"]
-  })
+  }
+
+  ami_owners = {
+    ubuntu      = "099720109477" # Canonical
+    amazonlinux = "amazon"
+    rhel        = "309956199498"
+  }
 }
 
 # Data source to get the latest AMI based on the provided filters
 data "aws_ami" "this" {
   most_recent = true
-  owners      = ["amazon"]
+  owners      = [local.ami_owners[var.os]]
   filter {
     name   = "name"
     values = var.ami_name == "" ? local.ami_filters[var.os] : [var.ami_name]
