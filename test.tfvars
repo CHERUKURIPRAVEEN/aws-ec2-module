@@ -1,3 +1,4 @@
+ami_name                = "ubuntu"
 os                      = "ubuntu"
 application             = "test-application"
 environment             = "Dev"

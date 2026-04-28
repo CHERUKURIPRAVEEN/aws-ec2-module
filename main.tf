@@ -14,18 +14,12 @@ locals {
     amazonlinux = ["al2023-ami-*"]
     rhel        = ["RHEL-9*"]
   }
-
-  ami_owners = {
-    ubuntu      = "277802554635" # Canonical
-    amazonlinux = "amazon"
-    rhel        = "309956199498"
-  }
 }
 
 # Data source to get the latest AMI based on the provided filters
 data "aws_ami" "this" {
-  most_recent = true
-  owners      = [local.ami_owners[var.os]]
+
+  owners = ["277802554635"]
   filter {
     name   = "name"
     values = var.ami_name == "" ? local.ami_filters[var.os] : [var.ami_name]
