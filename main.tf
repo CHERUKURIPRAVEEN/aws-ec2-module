@@ -79,36 +79,36 @@ data "aws_subnet" "private" {
   id = each.value
 }
 
-# resource "aws_instance" "this" {
-#   ami                  = var.ami_name
-#   instance_type        = var.instance_type
-#   iam_instance_profile = local.instance_role
-#   # subnet_id            = length(data.aws_subnets.public.ids) > 0 ? data.aws_subnets.public.ids[0] : data.aws_subnets.private.ids[0]
-#   subnet_id         = element(concat(data.aws_subnets.public.ids, data.aws_subnets.private.ids), 0)
-#   security_groups   = var.security_groups
-#   key_name          = var.key_pair
-#   availability_zone = local.az_filter[0]
-#   # private_ip        = var.ip_address
-#   # user_data = templatefile("${path.root}/scripts/userdata/${var.user_data_template_name}.sh",
-#   #   {
-#   #     environment = var.environment
-#   #   }
-#   # )
+resource "aws_instance" "this" {
+  ami                  = var.ami_name
+  instance_type        = var.instance_type
+  iam_instance_profile = local.instance_role
+  # subnet_id            = length(data.aws_subnets.public.ids) > 0 ? data.aws_subnets.public.ids[0] : data.aws_subnets.private.ids[0]
+  subnet_id       = element(concat(data.aws_subnets.public.ids, data.aws_subnets.private.ids), 0)
+  security_groups = var.security_groups
+  key_name        = var.key_pair
+  # availability_zone = local.az_filter[0]
+  # private_ip        = var.ip_address
+  # user_data = templatefile("${path.root}/scripts/userdata/${var.user_data_template_name}.sh",
+  #   {
+  #     environment = var.environment
+  #   }
+  # )
 
-#   tags = merge({
-#     Name = upper("${var.environment}-${var.project}-${var.application}")
-#   })
+  tags = merge({
+    Name = upper("${var.environment}-${var.project}-${var.application}")
+  })
 
-#   root_block_device {
-#     delete_on_termination = true
-#     encrypted             = true
-#     volume_type           = "gp3"
-#     volume_size           = var.os_disk_size
+  root_block_device {
+    delete_on_termination = true
+    encrypted             = true
+    volume_type           = "gp3"
+    volume_size           = var.os_disk_size
 
-#     tags = merge({
-#       Name = upper("${var.environment}-${var.project}-${var.application}-osdisk")
-#     }, local.tags, var.tags)
-#   }
+    tags = merge({
+      Name = upper("${var.environment}-${var.project}-${var.application}-osdisk")
+    }, local.tags, var.tags)
+  }
 
-# }
+}
 
