@@ -23,7 +23,7 @@ variable "os" {
   type        = string
 
   validation {
-    condition     = contains(["ubuntu", "amazonlinux", "rhel"], var.os)
+    condition     = contains(["ubuntu22", "ubuntu24", "ubuntu26"], var.os)
     error_message = "Invalid OS."
   }
 }
@@ -141,22 +141,12 @@ variable "key_pair" {
   default     = "MANAGED_KEY"
 }
 
-# variable "ip_address" {
-#   description = "Private IP Address to be supplied"
-#   type        = string
-#   default     = ""
 
-#   validation {
-#     condition     = can(regex("^[0-9]{2,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$", var.ip_address)) || var.ip_address == ""
-#     error_message = "Please enter a valid IP address or leave it blank to auto-pick."
-#   }
-# }
-
-# variable "user_data_template_name" {
-#   description = "Name of the user data template file (without extension)"
-#   type        = string
-#   default     = "userdata"
-# }
+variable "user_data_template_name" {
+  description = "Name of the user data template file (without extension)"
+  type        = string
+  default     = "userdata"
+}
 
 variable "os_disk_size" {
   description = "Size of the OS disk in GB"

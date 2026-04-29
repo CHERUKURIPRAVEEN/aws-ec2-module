@@ -6,7 +6,28 @@
 ##################################################################################################
 ###################################### EC2 Instance Module #######################################
 ##################################################################################################
+locals {
+  ami_filters = tomap({
+    ubuntu22 = "Jenkins-Server-Image*"
+    ubuntu24 = "Jenkins-Server-Image*"
+    ubuntu26 = "Jenkins-Server-Image*"
+  })
+}
+data "aws_ami" "this" {
+  most_recent = true
 
+  filter {
+    name   = "name"
+    values = var.ami_name == "" ? [local.ami_filters[var.os]] : [var.ami_name]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["762573174563"] # Image Factory Account
+}
 #local for tags to be applied to EC2 instance
 locals {
   # local to create a map of tags to be applied to EC2 instance by merging the default tags with the user provided tags
@@ -24,12 +45,6 @@ locals {
   # local to determine the instance role based on the provided instance_role variable
   instance_role = (var.instance_role != null ? var.instance_role : "V-EC2-SSM")
 }
-
-
-# # Data source to get the availability zones based on the provided availability_zone variable
-# data "aws_availability_zones" "this" {
-#   state = "available"
-# }
 
 # Data source to get the VPC details based on the provided vpc_name variable
 data "aws_vpc" "this" {
@@ -98,18 +113,17 @@ locals {
 }
 
 resource "aws_instance" "this" {
-  ami                  = var.ami_name
+  ami                  = data.aws_ami.this.id
   instance_type        = var.instance_type
   iam_instance_profile = local.instance_role
   subnet_id            = local.selected_subnet_id
   security_groups      = var.security_groups
   key_name             = var.key_pair
-  # private_ip        = var.ip_address
-  # user_data = templatefile("${path.root}/scripts/userdata/${var.user_data_template_name}.sh",
-  #   {
-  #     environment = var.environment
-  #   }
-  # )
+  user_data = templatefile("${path.root}/scripts/userdata/${var.user_data_template_name}.sh",
+    {
+      environment = var.environment
+    }
+  )
 
   tags = merge({
     Name = upper("${var.environment}-${var.project}-${var.application}")

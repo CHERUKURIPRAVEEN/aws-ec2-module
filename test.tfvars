@@ -1,5 +1,5 @@
 ami_name                = "ami-0d18c355a5d4aaa6c"
-os                      = "ubuntu"
+os                      = "ubuntu24"
 application             = "test-application"
 environment             = "Dev"
 project                 = "test-project"
