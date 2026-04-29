@@ -53,11 +53,11 @@ data "aws_subnets" "public" {
 }
 
 # Data source to get the details of each private subnet
-data "aws_subnet" "public" {
-  for_each = toset(data.aws_subnets.public.ids)
+# data "aws_subnet" "public" {
+#   for_each = toset(data.aws_subnets.public.ids)
 
-  id = each.value
-}
+#   id = each.value
+# }
 
 # Data source to get the private subnets in the VPC based on the provided vpc_name variable
 data "aws_subnets" "private" {
@@ -73,11 +73,11 @@ data "aws_subnets" "private" {
 }
 
 # Data source to get the details of each private subnet
-data "aws_subnet" "private" {
-  for_each = toset(data.aws_subnets.private.ids)
+# data "aws_subnet" "private" {
+#   for_each = toset(data.aws_subnets.private.ids)
 
-  id = each.value
-}
+#   id = each.value
+# }
 
 resource "aws_instance" "this" {
   ami                  = var.ami_name
