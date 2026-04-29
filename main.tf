@@ -53,11 +53,11 @@ data "aws_subnets" "public" {
 }
 
 # Data source to get the details of each private subnet
-# data "aws_subnet" "public" {
-#   for_each = toset(data.aws_subnets.public.ids)
+data "aws_subnet" "public" {
+  for_each = toset(data.aws_subnets.public.ids)
 
-#   id = each.value
-# }
+  id = each.value
+}
 
 # Data source to get the private subnets in the VPC based on the provided vpc_name variable
 data "aws_subnets" "private" {
@@ -73,20 +73,38 @@ data "aws_subnets" "private" {
 }
 
 # Data source to get the details of each private subnet
-# data "aws_subnet" "private" {
-#   for_each = toset(data.aws_subnets.private.ids)
+data "aws_subnet" "private" {
+  for_each = toset(data.aws_subnets.private.ids)
 
-#   id = each.value
-# }
+  id = each.value
+}
+
+locals {
+  selected_public_subnet_id = try(
+    [for s in data.aws_subnet.public : s.id if s.availability_zone == var.availability_zone][0],
+    null
+  )
+
+  selected_private_subnet_id = try(
+    [for s in data.aws_subnet.private : s.id if s.availability_zone == var.availability_zone][0],
+    null
+  )
+}
+
+locals {
+  selected_subnet_id = coalesce(
+    local.selected_public_subnet_id,
+    local.selected_private_subnet_id
+  )
+}
 
 resource "aws_instance" "this" {
   ami                  = var.ami_name
   instance_type        = var.instance_type
   iam_instance_profile = local.instance_role
-  # subnet_id            = length(data.aws_subnets.public.ids) > 0 ? data.aws_subnets.public.ids[0] : data.aws_subnets.private.ids[0]
-  subnet_id       = element(concat(data.aws_subnets.public.ids, data.aws_subnets.private.ids), 0)
-  security_groups = var.security_groups
-  key_name        = var.key_pair
+  subnet_id            = local.selected_subnet_id
+  security_groups      = var.security_groups
+  key_name             = var.key_pair
   # private_ip        = var.ip_address
   # user_data = templatefile("${path.root}/scripts/userdata/${var.user_data_template_name}.sh",
   #   {

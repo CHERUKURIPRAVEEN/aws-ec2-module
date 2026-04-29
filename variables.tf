@@ -101,10 +101,10 @@ variable "description" {
   }
 }
 
-# variable "availability_zone" {
-#   type    = string
-#   default = null
-# }
+variable "availability_zone" {
+  type    = string
+  default = "us-east-1a"
+}
 
 variable "vpc_name" {
   description = "vpc name"
