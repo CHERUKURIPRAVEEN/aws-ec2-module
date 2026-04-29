@@ -8,7 +8,7 @@ variable "tags" {
   description = "default tags"
   type        = map(string)
   default = {
-    "env" = "Dev"
+    "Createdby" = "Terraform"
   }
 }
 
@@ -167,11 +167,11 @@ variable "os_disk_size" {
 variable "required_public_subnet_name" {
   description = "Provide the pattern for the required public subnet name"
   type        = string
-  default     = "public"
+  default     = ""
 }
 
 variable "required_private_subnet_name" {
   description = "Provide the pattern for the required private subnet name"
   type        = string
-  default     = "private"
+  default     = ""
 }

@@ -2,10 +2,8 @@
 * AWS EC2 Module
 * Managed by Praveen Cherukuri
 */
+#-------------------------------------------------EC2 Instance Module-------------------------------------------------#
 
-##################################################################################################
-###################################### EC2 Instance Module #######################################
-##################################################################################################
 data "aws_ami" "this" {
   most_recent = true
 
@@ -34,13 +32,6 @@ locals {
     description = var.description
   })
 
-  # local to determine if public and private subnets are requested based on the provided required_public_subnet_name and required_private_subnet_name variables
-  public_requested  = trimspace(var.required_public_subnet_name) != ""
-  private_requested = trimspace(var.required_private_subnet_name) != ""
-
-  # local to determine if both public and private subnets are requested
-  both_passed = local.public_requested && local.private_requested
-
   # local to determine the instance role based on the provided instance_role variable
   instance_role = (var.instance_role != null ? var.instance_role : "V-EC2-SSM")
 }
@@ -52,64 +43,6 @@ data "aws_vpc" "this" {
     values = [upper(var.required_vpc_name)]
   }
 }
-
-# # Data source to get the public subnets in the VPC based on the provided vpc_name variable
-# data "aws_subnets" "public" {
-#   filter {
-#     name   = "vpc-id"
-#     values = [data.aws_vpc.this.id]
-#   }
-
-#   filter {
-#     name   = "tag:Name"
-#     values = [upper("${data.aws_vpc.this.id}-subnet-${var.required_public_subnet_name}-*")]
-#   }
-# }
-
-# # Data source to get the details of each private subnet
-# data "aws_subnet" "public" {
-#   for_each = toset(data.aws_subnets.public.ids)
-
-#   id = each.value
-# }
-
-# Data source to get the private subnets in the VPC based on the provided vpc_name variable
-# data "aws_subnets" "private" {
-#   filter {
-#     name   = "vpc-id"
-#     values = [data.aws_vpc.this.id]
-#   }
-
-#   filter {
-#     name   = "tag:Name"
-#     values = [upper("${data.aws_vpc.this.id}-subnet-${var.required_private_subnet_name}-*")]
-#   }
-# }
-
-# # Data source to get the details of each private subnet
-# data "aws_subnet" "private" {
-#   for_each = toset(data.aws_subnets.private.ids)
-
-#   id = each.value
-# }
-
-# locals {
-#   public_subnets = [
-#     for s in data.aws_subnet.public :
-#     s if s.availability_zone == var.availability_zone
-#   ]
-
-#   private_subnets = [
-#     for s in data.aws_subnet.private :
-#     s if s.availability_zone == var.availability_zone
-#   ]
-
-#   selected_subnet_id = try(
-#     local.public_subnets[0].id,
-#     local.private_subnets[0].id,
-#     null
-#   )
-# }
 
 data "aws_subnets" "public" {
   count = local.public_requested ? 1 : 0
@@ -126,7 +59,7 @@ data "aws_subnets" "public" {
 }
 
 data "aws_subnet" "public" {
-  for_each = local.public_requested ? toset(data.aws_subnets.public[0].ids) : []
+  for_each = local.public_requested ? toset(data.aws_subnets.public[0].ids) : toset([])
 
   id = each.value
 }
@@ -146,12 +79,17 @@ data "aws_subnets" "private" {
 }
 
 data "aws_subnet" "private" {
-  for_each = local.private_requested ? toset(data.aws_subnets.private[0].ids) : []
-
-  id = each.value
+  for_each = local.private_requested ? toset(data.aws_subnets.private[0].ids) : toset([])
+  id       = each.value
 }
 
+
 locals {
+
+  public_requested  = trimspace(var.required_public_subnet_name) != ""
+  private_requested = trimspace(var.required_private_subnet_name) != ""
+
+  both_passed = local.public_requested && local.private_requested
 
   public_subnets = local.public_requested ? [
     for s in data.aws_subnet.public :
@@ -163,6 +101,7 @@ locals {
     s if s.availability_zone == var.availability_zone
   ] : []
 
+  # IMPORTANT: choose based on what user passed
   selected_subnet_id = local.public_requested ? (
     local.public_subnets[0].id
     ) : local.private_requested ? (
@@ -184,9 +123,22 @@ resource "aws_instance" "this" {
     }
   )
 
+  lifecycle {
+
+    precondition {
+      condition     = local.both_passed == false
+      error_message = "Pass either required_public_subnet_name OR required_private_subnet_name, not both."
+    }
+
+    precondition {
+      condition     = local.selected_subnet_id != null
+      error_message = "No matching subnet found for selected AZ."
+    }
+  }
+
   tags = merge({
     Name = upper("${var.environment}-${var.project}-${var.application}-${format("%02d", count.index + 1)}")
-  })
+  }, var.tags, local.tags)
 
   root_block_device {
     delete_on_termination = true
