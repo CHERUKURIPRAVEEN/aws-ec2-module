@@ -26,7 +26,7 @@ data "aws_ami" "this" {
     values = ["hvm"]
   }
 
-  owners = ["762573174563"] # Image Factory Account
+  owners = ["277802554635"] # Image Factory Account
 }
 #local for tags to be applied to EC2 instance
 locals {
