@@ -119,7 +119,7 @@ resource "aws_instance" "this" {
   )
 
   tags = merge({
-    Name = upper("${var.environment}-${var.project}-${var.application}-${count.index + 1}")
+    Name = upper("${var.environment}-${var.project}-${var.application}-${format("%02d", count.index + 1)}")
   })
 
   root_block_device {
