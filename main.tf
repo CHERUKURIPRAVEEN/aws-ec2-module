@@ -111,6 +111,7 @@ resource "aws_instance" "this" {
   subnet_id            = local.selected_subnet_id
   security_groups      = var.security_groups
   key_name             = var.key_pair
+  count                = var.number_of_instances
   user_data = templatefile("${path.root}/scripts/userdata/${var.user_data_template_name}.sh",
     {
       environment = var.environment
@@ -118,7 +119,7 @@ resource "aws_instance" "this" {
   )
 
   tags = merge({
-    Name = upper("${var.environment}-${var.project}-${var.application}")
+    Name = upper("${var.environment}-${var.project}-${var.application}-${count.index + 1}")
   })
 
   root_block_device {

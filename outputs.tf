@@ -1,5 +1,5 @@
 output "instance_name" {
-  value = aws_instance.this.tags["Name"]
+  value = aws_instance.this[*].tags["Name"]
 }
 
 output "public_subnets_found" {

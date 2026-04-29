@@ -141,6 +141,16 @@ variable "key_pair" {
   default     = "MANAGED_KEY"
 }
 
+variable "number_of_instances" {
+  description = "Number of EC2 instances to be created."
+  type        = number
+  default     = 1
+
+  validation {
+    condition     = can(regex("^[0-9]{1,2}$", var.number_of_instances))
+    error_message = "Number of instances value should be number."
+  }
+}
 
 variable "user_data_template_name" {
   description = "Name of the user data template file (without extension)"

@@ -13,3 +13,4 @@ vpc_name                = "MANAGEMENT_VPC"
 availability_zone       = "us-east-1a"
 user_data_template_name = "userdata"
 key_pair                = "tf-key-pair"
+number_of_instances     = 3
