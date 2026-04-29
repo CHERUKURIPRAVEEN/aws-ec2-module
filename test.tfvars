@@ -11,6 +11,6 @@ region                  = "us-east-1"
 os_disk_size            = 100
 instance_type           = "t3.micro"
 vpc_name                = "MANAGEMENT_VPC"
-availability_zone       = "a"
+availability_zone       = "us-east-1a"
 user_data_template_name = "user_data.sh"
 key_pair                = "tf-key-pair"
