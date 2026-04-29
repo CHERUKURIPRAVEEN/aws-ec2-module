@@ -1,4 +1,4 @@
-ami_name                = "ami-051e483428ae60e7d"
+ami_name                = "ami-0d18c355a5d4aaa6c"
 os                      = "ubuntu"
 application             = "test-application"
 environment             = "Dev"
