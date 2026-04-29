@@ -42,7 +42,7 @@ locals {
 data "aws_vpc" "this" {
   filter {
     name   = "tag:Name"
-    values = [upper(var.vpc_name)]
+    values = [upper(var.required_vpc_name)]
   }
 }
 

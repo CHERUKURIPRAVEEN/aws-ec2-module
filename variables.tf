@@ -106,13 +106,13 @@ variable "availability_zone" {
   default = "us-east-1a"
 }
 
-variable "vpc_name" {
+variable "required_vpc_name" {
   description = "vpc name"
   type        = string
   default     = "MANAGEMENT_VPC"
 
   validation {
-    condition     = contains(["MANAGEMENT_VPC", "DEV_VPC", "STAGE_VPC", "PREPROD_VPC", "PRODUCTION_VPC"], var.vpc_name)
+    condition     = contains(["MANAGEMENT_VPC", "DEV_VPC", "STAGE_VPC", "PREPROD_VPC", "PRODUCTION_VPC"], var.required_vpc_name)
     error_message = "VPC name should be one of the allowed values."
   }
 }
