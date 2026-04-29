@@ -10,7 +10,7 @@
 # local variable to map OS to AMI filters
 locals {
   ami_filters = {
-    ubuntu      = ["Ubuntu-24"]
+    ubuntu      = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
     amazonlinux = ["al2023-ami-*"]
     rhel        = ["RHEL-9*"]
   }
