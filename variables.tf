@@ -152,11 +152,11 @@ variable "ip_address" {
   }
 }
 
-variable "user_data_template_name" {
-  description = "Name of the user data template file (without extension)"
-  type        = string
-  default     = "userdata"
-}
+# variable "user_data_template_name" {
+#   description = "Name of the user data template file (without extension)"
+#   type        = string
+#   default     = "userdata"
+# }
 
 variable "os_disk_size" {
   description = "Size of the OS disk in GB"
