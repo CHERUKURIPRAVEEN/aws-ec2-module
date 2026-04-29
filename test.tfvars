@@ -11,5 +11,5 @@ os_disk_size            = 100
 instance_type           = "t3.micro"
 vpc_name                = "MANAGEMENT_VPC"
 availability_zone       = "us-east-1a"
-user_data_template_name = "user_data"
+user_data_template_name = "userdata"
 key_pair                = "tf-key-pair"
