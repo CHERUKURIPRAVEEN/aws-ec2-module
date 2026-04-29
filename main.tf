@@ -123,7 +123,7 @@ resource "aws_instance" "this" {
 
   tags = merge({
     Name = upper("${var.environment}-${var.project}-${var.application}")
-  }, local.tags, var.tags)
+  })
 
   root_block_device {
     delete_on_termination = true
