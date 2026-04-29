@@ -8,28 +8,28 @@
 ##################################################################################################
 
 # local variable to map OS to AMI filters
-locals {
-  ami_filters = {
-    ubuntu      = ["Jenkins-*"]
-    amazonlinux = ["al2023-ami-*"]
-    rhel        = ["RHEL-9*"]
-  }
-}
+# locals {
+#   ami_filters = {
+#     ubuntu      = ["Jenkins-*"]
+#     amazonlinux = ["al2023-ami-*"]
+#     rhel        = ["RHEL-9*"]
+#   }
+# }
 
-# Data source to get the latest AMI based on the provided filters
-data "aws_ami" "this" {
+# # Data source to get the latest AMI based on the provided filters
+# data "aws_ami" "this" {
 
-  owners = ["277802554635"]
-  filter {
-    name   = "name"
-    values = var.ami_name == "" ? local.ami_filters[var.os] : [var.ami_name]
-  }
+#   owners = ["277802554635"]
+#   filter {
+#     name   = "name"
+#     values = var.ami_name == "" ? local.ami_filters[var.os] : [var.ami_name]
+#   }
 
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
+#   filter {
+#     name   = "virtualization-type"
+#     values = ["hvm"]
+#   }
+# }
 
 #local for tags to be applied to EC2 instance
 locals {
@@ -106,7 +106,7 @@ data "aws_subnets" "private" {
 # }
 
 resource "aws_instance" "this" {
-  ami                  = data.aws_ami.this.id
+  ami                  = var.ami_name
   instance_type        = var.instance_type
   iam_instance_profile = local.instance_role
   # subnet_id            = length(data.aws_subnets.public.ids) > 0 ? data.aws_subnets.public.ids[0] : data.aws_subnets.private.ids[0]
