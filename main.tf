@@ -91,6 +91,15 @@ locals {
   )
 }
 
+# Validation to ensure a subnet was found
+resource "null_resource" "validate_subnet" {
+  count = local.selected_subnet_id == null ? 1 : 0
+
+  provisioner "local-exec" {
+    command = "echo 'ERROR: No subnet found in the specified AZ (${var.availability_zone})' && exit 1"
+  }
+}
+
 locals {
   selected_subnet_id = coalesce(
     local.selected_public_subnet_id,
