@@ -163,3 +163,15 @@ variable "os_disk_size" {
   type        = number
   default     = 30
 }
+
+variable "required_public_subnet_name" {
+  description = "Provide the pattern for the required public subnet name"
+  type = string
+  default = "subnet-public"
+}
+
+variable "required_private_subnet_name" {
+  description = "Provide the pattern for the required private subnet name"
+  type = string
+  default = "subnet-private"
+}

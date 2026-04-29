@@ -55,7 +55,7 @@ data "aws_subnets" "public" {
 
   filter {
     name   = "tag:Name"
-    values = [upper("${data.aws_vpc.this.id}-subnet-public-*")]
+    values = [upper("${data.aws_vpc.this.id}-${var.required_public_subnet_name}-*")]
   }
 }
 
@@ -75,7 +75,7 @@ data "aws_subnets" "private" {
 
   filter {
     name   = "tag:Name"
-    values = [upper("${data.aws_vpc.this.id}-subnet-private-*")]
+    values = [upper("${data.aws_vpc.this.id}-${var.required_private_subnet_name}-*")]
   }
 }
 
