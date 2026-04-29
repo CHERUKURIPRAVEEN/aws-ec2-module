@@ -26,10 +26,10 @@ locals {
 }
 
 
-# Data source to get the availability zones based on the provided availability_zone variable
-data "aws_availability_zones" "this" {
-  state = "available"
-}
+# # Data source to get the availability zones based on the provided availability_zone variable
+# data "aws_availability_zones" "this" {
+#   state = "available"
+# }
 
 # Data source to get the VPC details based on the provided vpc_name variable
 data "aws_vpc" "this" {

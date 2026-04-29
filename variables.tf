@@ -141,16 +141,16 @@ variable "key_pair" {
   default     = "MANAGED_KEY"
 }
 
-variable "ip_address" {
-  description = "Private IP Address to be supplied"
-  type        = string
-  default     = ""
+# variable "ip_address" {
+#   description = "Private IP Address to be supplied"
+#   type        = string
+#   default     = ""
 
-  validation {
-    condition     = can(regex("^[0-9]{2,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$", var.ip_address)) || var.ip_address == ""
-    error_message = "Please enter a valid IP address or leave it blank to auto-pick."
-  }
-}
+#   validation {
+#     condition     = can(regex("^[0-9]{2,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$", var.ip_address)) || var.ip_address == ""
+#     error_message = "Please enter a valid IP address or leave it blank to auto-pick."
+#   }
+# }
 
 # variable "user_data_template_name" {
 #   description = "Name of the user data template file (without extension)"
