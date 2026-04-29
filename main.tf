@@ -6,19 +6,12 @@
 ##################################################################################################
 ###################################### EC2 Instance Module #######################################
 ##################################################################################################
-locals {
-  ami_filters = tomap({
-    ubuntu22 = "Jenkins-Server-Image*"
-    ubuntu24 = "Jenkins-Server-Image*"
-    ubuntu26 = "Jenkins-Server-Image*"
-  })
-}
 data "aws_ami" "this" {
   most_recent = true
 
   filter {
     name   = "name"
-    values = var.ami_name == "" ? [local.ami_filters[var.os]] : [var.ami_name]
+    values = [var.ami_name]
   }
 
   filter {
@@ -32,7 +25,6 @@ data "aws_ami" "this" {
 locals {
   # local to create a map of tags to be applied to EC2 instance by merging the default tags with the user provided tags
   tags = ({
-    os          = var.os
     application = var.application
     environment = var.environment
     project     = var.project

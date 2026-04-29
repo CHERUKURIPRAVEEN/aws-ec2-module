@@ -18,15 +18,15 @@ variable "ami_name" {
   default     = "ubuntu"
 }
 
-variable "os" {
-  description = "Operating System"
-  type        = string
+# variable "os" {
+#   description = "Operating System"
+#   type        = string
 
-  validation {
-    condition     = contains(["ubuntu22", "ubuntu24", "ubuntu26"], var.os)
-    error_message = "Invalid OS."
-  }
-}
+#   validation {
+#     condition     = contains(["ubuntu22", "ubuntu24", "ubuntu26"], var.os)
+#     error_message = "Invalid OS."
+#   }
+# }
 
 variable "application" {
   description = "Application tag value for the EC2 instance. Minimum of 8 characters."

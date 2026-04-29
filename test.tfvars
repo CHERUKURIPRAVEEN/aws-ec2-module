@@ -1,5 +1,4 @@
-ami_name                = "ami-0d18c355a5d4aaa6c"
-os                      = "ubuntu24"
+ami_name                = "Jenkins-Server-Image"
 application             = "test-application"
 environment             = "Dev"
 project                 = "test-project"
