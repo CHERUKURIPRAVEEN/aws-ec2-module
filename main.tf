@@ -80,30 +80,20 @@ data "aws_subnet" "private" {
 }
 
 locals {
-  selected_public_subnet_id = try(
-    [for s in data.aws_subnet.public : s.id if s.availability_zone == var.availability_zone][0],
+  public_subnets = [
+    for s in data.aws_subnet.public :
+    s if s.availability_zone == var.availability_zone
+  ]
+
+  private_subnets = [
+    for s in data.aws_subnet.private :
+    s if s.availability_zone == var.availability_zone
+  ]
+
+  selected_subnet_id = try(
+    local.public_subnets[0].id,
+    local.private_subnets[0].id,
     null
-  )
-
-  selected_private_subnet_id = try(
-    [for s in data.aws_subnet.private : s.id if s.availability_zone == var.availability_zone][0],
-    null
-  )
-}
-
-# Validation to ensure a subnet was found
-resource "null_resource" "validate_subnet" {
-  count = local.selected_subnet_id == null ? 1 : 0
-
-  provisioner "local-exec" {
-    command = "echo 'ERROR: No subnet found in the specified AZ (${var.availability_zone})' && exit 1"
-  }
-}
-
-locals {
-  selected_subnet_id = coalesce(
-    local.selected_public_subnet_id,
-    local.selected_private_subnet_id
   )
 }
 
