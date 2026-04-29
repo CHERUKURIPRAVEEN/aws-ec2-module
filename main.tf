@@ -115,11 +115,11 @@ resource "aws_instance" "this" {
   key_name          = var.key_pair
   availability_zone = local.az_filter[0]
   private_ip        = var.ip_address
-  user_data = templatefile("${path.root}/scripts/userdata/${var.user_data_template_name}.sh",
-    {
-      environment = var.environment
-    }
-  )
+  # user_data = templatefile("${path.root}/scripts/userdata/${var.user_data_template_name}.sh",
+  #   {
+  #     environment = var.environment
+  #   }
+  # )
 
   tags = merge({
     Name = upper("${var.environment}-${var.project}-${var.application}")
