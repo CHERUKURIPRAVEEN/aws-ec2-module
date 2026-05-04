@@ -110,13 +110,13 @@ locals {
 }
 
 resource "aws_instance" "this" {
-  ami                  = data.aws_ami.this.id
-  instance_type        = var.instance_type
-  iam_instance_profile = local.instance_role
-  subnet_id            = local.selected_subnet_id
-  security_groups      = var.security_groups
-  key_name             = var.key_pair
-  count                = var.number_of_instances
+  ami                    = data.aws_ami.this.id
+  instance_type          = var.instance_type
+  iam_instance_profile   = local.instance_role
+  subnet_id              = local.selected_subnet_id
+  vpc_security_group_ids = var.security_groups
+  key_name               = var.key_pair
+  count                  = var.number_of_instances
   user_data = templatefile("${path.root}/scripts/userdata/${var.user_data_template_name}.sh",
     {
       environment = var.environment
